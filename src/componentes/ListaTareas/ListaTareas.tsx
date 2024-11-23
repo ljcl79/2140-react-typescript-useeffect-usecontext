@@ -1,41 +1,55 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import './ListaTareas.css';
 import ITarea from "../../interfaces/ITarea";
 import Tarea from "../Tarea/Tarea";
 import Formulario from "../Formulario/Formulario";
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
-interface IProps { };
+interface IProps {
+    filtro: string,
+    finalizadas: boolean
+};
 
 
-const ListaTareas: FC<IProps> = () => {
+const ListaTareas: FC<IProps> = ({ filtro, finalizadas }) => {
 
-    const [filtro] = useState<string>('');
-    const [finalizadas] = useState<boolean>(false);
+    const creacionComponente = useRef<boolean>(true);
     //const [tareas, setTareas] = useState();
 
     const [tareas, setTareas] = useState<ITarea[]>([
-        {
-            id: 1,
-            nombre: 'Aprender React + Typescript',
-            descripcion: 'Realizar la formación Alura para aprender React + Typescript',
-            estado: 'Ejecución',
-            fecha: new Date('2024-12-31')
-        },
-        {
-            id: 2,
-            nombre: 'Practicar typescript',
-            descripcion: 'Practicar el lenguaje',
-            estado: 'Finalizado',
-            fecha: new Date('2024-09-30')
-        },
-        {
-            id: 3,
-            nombre: 'Hacer caminata',
-            descripcion: 'Mantener la salud',
-            estado: 'Planificado',
-            fecha: new Date('2024-12-31')
-        },
+
     ]);
+
+    const guardarDatosEnLocalStorage = (clave: string, valor: ITarea[]) => {
+        localStorage.setItem(clave, JSON.stringify(valor));
+    }
+
+    const cargarDatosDeLocalStorage = (clave: string) => {
+        const data: string | null = localStorage.getItem(clave);
+        return data && data !== 'undefined' ? JSON.parse(data) as ITarea[] : [];
+    }
+
+    useEffect(() => {
+        setTareas(cargarDatosDeLocalStorage("tareas").map((tarea: ITarea) => {
+            return {
+                ...tarea,
+                fecha: new Date(tarea.fecha)
+            }
+        }));
+    }, []);
+
+    useEffect(() => {
+        //Callback
+        if (creacionComponente.current) {
+            creacionComponente.current = false;
+            return;
+        }
+        guardarDatosEnLocalStorage("tareas", tareas);
+        toast('Tareas actualizadas');
+
+    }, [tareas]);
+
 
     const tareasFiltradas: ITarea[] = tareas.filter((tarea: ITarea) => {
         return (tarea.nombre.toLowerCase().includes(filtro.toLowerCase()) || filtro === '')
@@ -78,6 +92,7 @@ const ListaTareas: FC<IProps> = () => {
                     }
                 </ul>
             </div>
+            <ToastContainer />
         </>
     )
 };
