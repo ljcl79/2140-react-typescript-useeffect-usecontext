@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useState } from "react";
+import { FC, useState } from "react";
 import './ListaTareas.css';
 import ITarea from "../../interfaces/ITarea";
 import Tarea from "../Tarea/Tarea";
@@ -9,8 +9,8 @@ interface IProps { };
 
 const ListaTareas: FC<IProps> = () => {
 
-    const [filtro, setFiltro] = useState<string>('');
-    const [finalizadas, setFinalizadas] = useState<boolean>(false);
+    const [filtro] = useState<string>('');
+    const [finalizadas] = useState<boolean>(false);
     //const [tareas, setTareas] = useState();
 
     const [tareas, setTareas] = useState<ITarea[]>([
