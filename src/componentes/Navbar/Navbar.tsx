@@ -1,16 +1,18 @@
 import { FC, useRef } from "react";
+import { useTareasContext } from "../../context/TareaContex";
 
 interface IProps {
     titulo: string,
-    setFiltro: (value: string) => void,
-    setFinalizadas: (updateFn: (prevValue: boolean) => boolean) => void,
 };
 
-const Navbar: FC<IProps> = ({ titulo, setFiltro, setFinalizadas }) => {
+const Navbar: FC<IProps> = ({ titulo }) => {
     const searchWrapperRef = useRef<HTMLDivElement>(null);
     const searchButtonRef = useRef<HTMLButtonElement>(null);
     const closeButtonRef = useRef<HTMLButtonElement>(null);
     const searchInputRef = useRef<HTMLInputElement>(null);
+
+    //3. Consumiendo el contexto
+    const { setFiltro, setFinalizadas } = useTareasContext();
 
     function toggleSearch(): void {
         if (searchWrapperRef.current && closeButtonRef.current && searchButtonRef.current) {

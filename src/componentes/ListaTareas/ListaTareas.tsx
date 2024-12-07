@@ -6,53 +6,21 @@ import Formulario from "../Formulario/Formulario";
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import fetchDataAPI from "../../services/APIService";
+import { useTareasContext } from "../../context/TareaContex";
 
 interface IProps {
-    filtro: string,
-    finalizadas: boolean
+
 };
 
 
-const ListaTareas: FC<IProps> = ({ filtro, finalizadas }) => {
+const ListaTareas: FC<IProps> = ({ }) => {
 
-    //const creacionComponente = useRef<boolean>(true);
     //const [tareas, setTareas] = useState();
     const apiURL = 'http://localhost:3000/tareas';
     const [loading, setLoading] = useState(false);
-    const [tareas, setTareas] = useState<ITarea[]>([
 
-    ]);
-
-    // const guardarDatosEnLocalStorage = (clave: string, valor: ITarea[]) => {
-    //     localStorage.setItem(clave, JSON.stringify(valor));
-    // }
-
-    // const cargarDatosDeLocalStorage = (clave: string) => {
-    //     const data: string | null = localStorage.getItem(clave);
-    //     return data && data !== 'undefined' ? JSON.parse(data) as ITarea[] : [];
-    // }
-
-    // useEffect(() => {
-    //     setTareas(cargarDatosDeLocalStorage("tareas").map((tarea: ITarea) => {
-    //         return {
-    //             ...tarea,
-    //             fecha: new Date(tarea.fecha)
-    //         }
-    //     }));
-    // }, []);
-
-    // useEffect(() => {
-    //     //Callback
-    //     if (creacionComponente.current) {
-    //         creacionComponente.current = false;
-    //         return;
-    //     }
-    //     guardarDatosEnLocalStorage("tareas", tareas);
-    //     toast('Tareas actualizadas');
-
-    // }, [tareas]);
-
-
+    //3. Consumiendo el contexto
+    const { tareas, setTareas, filtro, finalizadas } = useTareasContext();
 
     useEffect(() => {
         const cargarTareasDesdeAPI = async () => {
@@ -62,7 +30,7 @@ const ListaTareas: FC<IProps> = ({ filtro, finalizadas }) => {
             if (res.error) {
                 toast(res.error);
             } else if (res.data && Array.isArray(res.data)) {
-                setTareas(res.data.map((tarea: ITarea) => {
+                setTareas(() => res.data!.map((tarea: ITarea) => {
                     return {
                         ...tarea,
                         fecha: new Date(tarea.fecha)
@@ -89,7 +57,7 @@ const ListaTareas: FC<IProps> = ({ filtro, finalizadas }) => {
         if (res.error) {
             toast(res.error);
         } else {
-            setTareas([...tareas, tarea]);
+            setTareas(() => [...tareas, tarea]);
         }
     }
 
@@ -100,7 +68,7 @@ const ListaTareas: FC<IProps> = ({ filtro, finalizadas }) => {
         if (res.error) {
             toast(res.error);
         } else {
-            setTareas(prev => prev.map(tarea => tarea.id === id ?
+            setTareas(prev => prev!.map(tarea => tarea.id === id ?
                 { ...tarea, estado: 'Finalizado' } : tarea))
         }
     }
@@ -112,7 +80,7 @@ const ListaTareas: FC<IProps> = ({ filtro, finalizadas }) => {
         if (res.error) {
             toast(res.error);
         } else {
-            setTareas(prev => prev.filter(tarea => tarea.id !== id));
+            setTareas(prev => prev!.filter(tarea => tarea.id !== id));
         }
     }
     if (loading) {

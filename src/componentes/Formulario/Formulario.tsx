@@ -8,6 +8,8 @@ interface IFormularioProps {
 };
 
 const Formulario: FC<IFormularioProps> = ({ onSubmit }) => {
+
+
     const initialData: Omit<ITarea, 'id'> = {
         nombre: '',
         descripcion: '',

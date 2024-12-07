@@ -1,4 +1,5 @@
 import './App.css'
+import { TareasProvider } from './context/TareaContex'
 
 import Home from './views/Home'
 
@@ -6,9 +7,11 @@ function App() {
 
   return (
     <>
-      <Home>
+      <TareasProvider>
+        <Home>
 
-      </Home>
+        </Home>
+      </TareasProvider>
 
     </>
   )
