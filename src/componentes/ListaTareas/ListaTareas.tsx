@@ -6,7 +6,8 @@ import Formulario from "../Formulario/Formulario";
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import fetchDataAPI from "../../services/APIService";
-import { useTareasContext } from "../../context/TareaContex";
+import { useTareasContext } from "../../context/Tarea/TareaProvider";
+import { useFiltrosContext } from "../../context/Filtros/FiltrosProvider";
 
 interface IProps {
 
@@ -16,11 +17,11 @@ interface IProps {
 const ListaTareas: FC<IProps> = ({ }) => {
 
     //const [tareas, setTareas] = useState();
-    const apiURL = 'http://localhost:3000/tareas';
     const [loading, setLoading] = useState(false);
 
     //3. Consumiendo el contexto
-    const { tareas, setTareas, filtro, finalizadas } = useTareasContext();
+    const { apiURL, tareas, setTareas } = useTareasContext();
+    const { filtro, finalizadas } = useFiltrosContext();
 
     useEffect(() => {
         const cargarTareasDesdeAPI = async () => {
@@ -51,38 +52,7 @@ const ListaTareas: FC<IProps> = ({ }) => {
             (!finalizadas || tarea.estado === 'Finalizado');
     })
 
-    const agregarTarea = async (tarea: ITarea) => {
 
-        const res = await fetchDataAPI<ITarea>(apiURL, "POST", tarea);
-        if (res.error) {
-            toast(res.error);
-        } else {
-            setTareas(() => [...tareas, tarea]);
-        }
-    }
-
-    const onFinalizar = async (id: string) => {
-        const endPoint = `${apiURL}/${id}`;
-        const res = await fetchDataAPI<ITarea>(endPoint, "PATCH", { estado: 'Finalizado' });
-
-        if (res.error) {
-            toast(res.error);
-        } else {
-            setTareas(prev => prev!.map(tarea => tarea.id === id ?
-                { ...tarea, estado: 'Finalizado' } : tarea))
-        }
-    }
-
-    const onEliminar = async (id: string) => {
-        const endPoint = `${apiURL}/${id}`;
-        const res = await fetchDataAPI<ITarea>(endPoint, "DELETE");
-
-        if (res.error) {
-            toast(res.error);
-        } else {
-            setTareas(prev => prev!.filter(tarea => tarea.id !== id));
-        }
-    }
     if (loading) {
         return (<h1>Cargando tareas...</h1>)
     }
@@ -91,7 +61,7 @@ const ListaTareas: FC<IProps> = ({ }) => {
         <>
             <div className="formWrapper">
                 <h2>Creación de Tareas</h2>
-                <Formulario onSubmit={agregarTarea}></Formulario>
+                <Formulario></Formulario>
             </div>
 
             <hr />
@@ -103,8 +73,7 @@ const ListaTareas: FC<IProps> = ({ }) => {
                             <Tarea tarea={tarea}
                                 key={tarea.id}
                                 index={index}
-                                onFinalizar={onFinalizar}
-                                onEliminar={onEliminar}></Tarea>
+                            ></Tarea>
                         ))
                     }
                 </ul>

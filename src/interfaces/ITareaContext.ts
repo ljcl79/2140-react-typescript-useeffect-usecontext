@@ -1,12 +1,12 @@
 import ITarea from "./ITarea";
 
 interface ITareaContext {
-    filtro: string,
-    setFiltro: (valor: string) => void,
-    finalizadas: boolean,
-    setFinalizadas: (updateFn: (prevValue: boolean) => boolean) => void,
+    apiURL: string,
     tareas: ITarea[],
     setTareas: (updateFn: (prevValue?: ITarea[]) => ITarea[]) => void,
+    agregarTarea: (tarea: ITarea) => Promise<void>,
+    onFinalizar: (id: string) => Promise<void>,
+    onEliminar: (id: string) => Promise<void>,
 }
 
 export default ITareaContext;

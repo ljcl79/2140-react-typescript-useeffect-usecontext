@@ -1,5 +1,5 @@
 import { FC, useRef } from "react";
-import { useTareasContext } from "../../context/TareaContex";
+import { useFiltrosContext } from "../../context/Filtros/FiltrosProvider";
 
 interface IProps {
     titulo: string,
@@ -12,7 +12,7 @@ const Navbar: FC<IProps> = ({ titulo }) => {
     const searchInputRef = useRef<HTMLInputElement>(null);
 
     //3. Consumiendo el contexto
-    const { setFiltro, setFinalizadas } = useTareasContext();
+    const { setFiltro, setFinalizadas } = useFiltrosContext();
 
     function toggleSearch(): void {
         if (searchWrapperRef.current && closeButtonRef.current && searchButtonRef.current) {

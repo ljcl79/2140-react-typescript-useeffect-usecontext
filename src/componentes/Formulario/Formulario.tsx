@@ -2,13 +2,15 @@ import { FC } from "react";
 import ITarea from "../../interfaces/ITarea";
 import { FormularioGenerico } from "../FormularioGenerico/FormularioGenerico";
 import IFormField from "../../interfaces/IFormField";
+import { useTareasContext } from "../../context/Tarea/TareaProvider";
 
 interface IFormularioProps {
-    onSubmit: (tarea: ITarea) => void;
+
 };
 
-const Formulario: FC<IFormularioProps> = ({ onSubmit }) => {
+const Formulario: FC<IFormularioProps> = () => {
 
+    const { agregarTarea } = useTareasContext();
 
     const initialData: Omit<ITarea, 'id'> = {
         nombre: '',
@@ -56,7 +58,7 @@ const Formulario: FC<IFormularioProps> = ({ onSubmit }) => {
             fecha: new Date(`${data.fecha} 00:00:00`)
         }
 
-        onSubmit(nuevaTarea);
+        agregarTarea(nuevaTarea);
     }
 
     return (
