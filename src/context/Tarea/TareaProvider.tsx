@@ -1,20 +1,30 @@
-import { FC, ReactNode, useContext, useState } from "react";
+import { FC, ReactNode, useContext, useReducer } from "react";
 import ITareaContext from "../../interfaces/ITareaContext";
 import ITarea from "../../interfaces/ITarea";
 import fetchDataAPI from "../../services/APIService";
 import { toast } from "react-toastify";
 import TareaContext from "./TareaContext";
+import { tareasReducer, TareasState } from "../../reducers/TareasReducer";
 
 //2.Compartir el contexto
 interface ITareaContextProps {
     children: ReactNode
 };
 
+const initialState: TareasState = {
+    tareas: []
+};
+
 export const TareasProvider: FC<ITareaContextProps> = ({ children }) => {
     const apiURL = 'http://localhost:3000/tareas';
-    const [tareas, setTareas] = useState<ITarea[]>([
+    // const [tareas, setTareas] = useState<ITarea[]>([
 
-    ]);
+    // ]);
+    const [state, dispatch] = useReducer(tareasReducer, initialState)
+
+    const cargarTareas = (tareas: ITarea[]) => {
+        dispatch({ type: 'CARGAR_TAREAS', payload: tareas });
+    }
 
     const agregarTarea = async (tarea: ITarea) => {
 
@@ -22,7 +32,7 @@ export const TareasProvider: FC<ITareaContextProps> = ({ children }) => {
         if (res.error) {
             toast(res.error);
         } else {
-            setTareas(() => [...tareas, tarea]);
+            dispatch({ type: 'AGREGAR_TAREA', payload: tarea });
         }
     }
 
@@ -33,8 +43,7 @@ export const TareasProvider: FC<ITareaContextProps> = ({ children }) => {
         if (res.error) {
             toast(res.error);
         } else {
-            setTareas(prev => prev!.map(tarea => tarea.id === id ?
-                { ...tarea, estado: 'Finalizado' } : tarea))
+            dispatch({ type: 'FINALIZAR_TAREA', payload: id });
         }
     }
 
@@ -45,14 +54,14 @@ export const TareasProvider: FC<ITareaContextProps> = ({ children }) => {
         if (res.error) {
             toast(res.error);
         } else {
-            setTareas(prev => prev!.filter(tarea => tarea.id !== id));
+            dispatch({ type: 'ELIMINAR_TAREA', payload: id });
         }
     }
 
     const objProvider: ITareaContext = {
         apiURL,
-        tareas,
-        setTareas,
+        tareas: state.tareas,
+        cargarTareas,
         agregarTarea,
         onFinalizar,
         onEliminar

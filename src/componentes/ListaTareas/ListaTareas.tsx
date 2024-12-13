@@ -20,7 +20,7 @@ const ListaTareas: FC<IProps> = ({ }) => {
     const [loading, setLoading] = useState(false);
 
     //3. Consumiendo el contexto
-    const { apiURL, tareas, setTareas } = useTareasContext();
+    const { apiURL, tareas, cargarTareas } = useTareasContext();
     const { filtro, finalizadas } = useFiltrosContext();
 
     useEffect(() => {
@@ -31,12 +31,7 @@ const ListaTareas: FC<IProps> = ({ }) => {
             if (res.error) {
                 toast(res.error);
             } else if (res.data && Array.isArray(res.data)) {
-                setTareas(() => res.data!.map((tarea: ITarea) => {
-                    return {
-                        ...tarea,
-                        fecha: new Date(tarea.fecha)
-                    }
-                }));
+                cargarTareas(res.data);
             }
             setLoading(false);
 

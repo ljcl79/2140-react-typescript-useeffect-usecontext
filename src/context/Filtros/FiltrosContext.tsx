@@ -4,9 +4,9 @@ import IFiltrosContext from "../../interfaces/IFiltrosContext";
 //1.Creamos el contexto
 const FiltrosContext = createContext<IFiltrosContext>({
     filtro: '',
-    setFiltro: () => { },
+    filtrarTareas: () => { },
     finalizadas: false,
-    setFinalizadas: () => { },
+    mostrarFinalizadas: () => { },
 });
 
 export default FiltrosContext;

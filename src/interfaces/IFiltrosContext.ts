@@ -1,8 +1,8 @@
 interface IFiltrosContext {
     filtro: string,
-    setFiltro: (valor: string) => void,
+    filtrarTareas: (filtro: string) => void,
     finalizadas: boolean,
-    setFinalizadas: (updateFn: (prevValue: boolean) => boolean) => void,
+    mostrarFinalizadas: () => void,
 }
 
 export default IFiltrosContext;

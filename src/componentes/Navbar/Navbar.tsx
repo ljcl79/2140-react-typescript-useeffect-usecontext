@@ -12,7 +12,7 @@ const Navbar: FC<IProps> = ({ titulo }) => {
     const searchInputRef = useRef<HTMLInputElement>(null);
 
     //3. Consumiendo el contexto
-    const { setFiltro, setFinalizadas } = useFiltrosContext();
+    const { filtrarTareas, mostrarFinalizadas } = useFiltrosContext();
 
     function toggleSearch(): void {
         if (searchWrapperRef.current && closeButtonRef.current && searchButtonRef.current) {
@@ -52,13 +52,13 @@ const Navbar: FC<IProps> = ({ titulo }) => {
                 <div ref={searchWrapperRef} className="search-wrapper" id="searchWrapper">
                     <div className="inputSearchWrapper">
                         <input ref={searchInputRef} type="text" className="search-input"
-                            placeholder="Digite para filtrar" onChange={(e) => setFiltro(e.target.value)} />
+                            placeholder="Digite para filtrar" onChange={(e) => filtrarTareas(e.target.value)} />
                         <button ref={closeButtonRef} className="close-search" onClick={closeSearch}>✕</button>
                     </div>
                     <div>
                         <label>
                             Mostrar sólo finalizadas:
-                            <input type="checkbox" onClick={() => setFinalizadas((prev) => !prev)} />
+                            <input type="checkbox" onClick={() => mostrarFinalizadas()} />
                         </label>
                     </div>
                 </div>
